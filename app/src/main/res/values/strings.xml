@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="signin">Entrar</string>
+    <string name="signup">Inscrever-se</string>
+    <string name="btn_login">Login</string>
+    <string name="txt_esqueceu_a_senha">Esqueceu a senha?</string>
+    <string name="txt_login">Login</string>
+</resources>
