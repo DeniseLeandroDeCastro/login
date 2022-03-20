@@ -1,34 +1,32 @@
 package br.com.login.login
 
+import br.com.login.data.remote.LoginRepository
 import br.com.login.data.remote.LoginRepositoryImpl
 import br.com.login.enums.LoginState
 
-class LoginPresenter(private var loginContract: LoginContract.View?) : LoginContract.Presenter {
+class LoginPresenter(private var view: LoginContract.View?, private val loginRepository: LoginRepository) : LoginContract.Presenter {
 
     /**
      * Para implementar as regras de negócio, o presenter
      * precisa conhecer a interface, é preciso adicionar
      * um objeto view e implementar os métodos de validação.
      */
-    lateinit var view: LoginContract.View
 
     override fun onLogin(email: String, password: String) {
-        val user = LoginRepositoryImpl(email, password)
-        val loginCode = user.isDataValid()
-
-        if (loginCode == LoginState.OTHER_ERROR)
-            loginContract?.onLoginError("Falha ao tentar fazer login.")
-        else if (loginCode == LoginState.LOGIN_EMAIL_ERROR)
-            loginContract?.onLoginError("Email inválido!")
-        else if (loginCode == LoginState.LOGIN_PASSWORD_ERROR)
-            loginContract?.onLoginError("Senha inválida!")
-        else {
-            loginContract?.onLoginSuccess("Login efetuado com sucesso!")
-            loginContract?.openHome()
+        val loginCode = loginRepository.login(email, password)
+            if (loginCode == LoginState.OTHER_ERROR)
+                view?.onLoginError("Falha ao tentar fazer login.")
+            else if (loginCode == LoginState.LOGIN_EMAIL_ERROR)
+                view?.onLoginError("Email inválido!")
+            else if (loginCode == LoginState.LOGIN_PASSWORD_ERROR)
+                view?.onLoginError("Senha inválida!")
+            else {
+                view?.onLoginSuccess("Login efetuado com sucesso!")
+                view?.openHome()
         }
     }
 
     override fun onClose() {
-        loginContract = null
+        view= null
     }
 }

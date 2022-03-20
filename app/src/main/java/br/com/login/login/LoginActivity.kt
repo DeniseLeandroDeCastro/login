@@ -1,10 +1,12 @@
 package br.com.login.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import br.com.login.R
+import br.com.login.data.remote.LoginRepository
+import br.com.login.data.remote.LoginRepositoryImpl
 import br.com.login.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -15,13 +17,12 @@ class LoginActivity() : AppCompatActivity(), LoginContract.View {
      * e dizer que a view tem um presenter.
      */
 
-    private val presenter = LoginPresenter(this)
+    private val loginRepository: LoginRepository = LoginRepositoryImpl()
+    private val presenter: LoginContract.Presenter = LoginPresenter(this, loginRepository)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        presenter.view = this
 
         btnLogin.setOnClickListener {
             presenter.onLogin(edtEmail.text.toString(), edtPassword.text.toString())
